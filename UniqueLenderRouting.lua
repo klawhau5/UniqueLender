@@ -34,9 +34,7 @@ function GetTransactions()
 
 	table.sort(UniqueLenderTNs, compar)
 
-
 	connection:Dispose()
-
 
 	--retrieve tns that have just been checked in from customer
 
@@ -47,13 +45,13 @@ function GetTransactions()
 	q = q .. "and t.TransactionNumber in "
 	q = q .. "(select TransactionNumber from History where TransactionNumber = t.TransactionNumber and Entry = 'Checked Out to Customer' and Datetime = CONVERT(VARCHAR(12),GETDATE(), 101)"
 
-	
 	connection.QueryString = q
 	connection:Connect()
 	tns = connection:Execute()
 	local RequestFinishedTNs = {}
 	for i = 0, tns.Rows.Count - 1 do
 		RequestFinishedTNs[i] = tns.Rows:get_Item(i)
+		LogDebug("Added from Unique Lender queue: " .. tns.Rows:get_Item(i):get_Item("TransactionNumber"))
 	end
 
 	connection:Dispose()
