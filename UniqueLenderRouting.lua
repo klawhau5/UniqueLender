@@ -43,7 +43,9 @@ function GetTransactions()
 	q = q .. "where t.TransactionStatus = 'Request Finished' "
 	q = q .. "and t.TransactionNumber = h.TransactionNumber "
 	q = q .. "and t.TransactionNumber in "
-	q = q .. "(select TransactionNumber from History where TransactionNumber = t.TransactionNumber and Entry = 'Checked Out to Customer' and Datetime = CONVERT(VARCHAR(12),GETDATE(), 101)"
+	q = q .. "(select TransactionNumber from History where TransactionNumber =
+		t.TransactionNumber and Entry = 'Checked Out to Customer' and Datetime = 
+		CONVERT(VARCHAR(12),GETDATE(), 101)"
 
 	connection.QueryString = q
 	connection:Connect()
@@ -65,8 +67,11 @@ function GetTransactions()
 	--or maybe it is fixed...?
 	for i = 0, #RequestFinishedTNs - 1 do
 		for j = 0, #UniqueLenderTNs - 1 do
-			if (UniqueLenderTNs[i]:get_Item("Username") == RequestFinishedTNs[j].get_Item("Username") and UniqueLenderTNs[i]:get_Item("LendingLibrary") == RequestFinishedTNs[j]:get_Item("LendingLibrary") and
-				not flags[ReturnTNs[j]:get_Item("TransactionNumber")) then
+			if (UniqueLenderTNs[i]:get_Item("Username") ==
+					RequestFinishedTNs[j].get_Item("Username") and
+					UniqueLenderTNs[i]:get_Item("LendingLibrary") ==
+					RequestFinishedTNs[j]:get_Item("LendingLibrary") and not
+					flags[ReturnTNs[j]:get_Item("TransactionNumber")) then
 				table.insert(ReturnTNs, UniqueLenderTNs[i]:get_Item("TransactionNumber"))
 				flags[ReturnTNs[j]:get_Item("TransactionNumber")] = true
 				i = i + 1
